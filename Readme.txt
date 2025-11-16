@@ -1,0 +1,1 @@
+First create a postgres databse name : simple_api_db

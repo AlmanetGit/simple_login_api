@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth System</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container">
+
+    <h2 id="form-title">Login</h2>
+
+    <div id="message"></div>
+
+    <form id="auth-form">
+        <div id="username-field" class="hidden">
+            <input type="text" id="username" placeholder="Enter Username" />
+        </div>
+
+        <input type="email" id="email" placeholder="Enter Email" required />
+        <input type="password" id="password" placeholder="Enter Password" required />
+
+        <button type="submit" id="submit-btn">Login</button>
+    </form>
+
+    <p class="toggle-text">
+        <span id="toggle-action">Don't have an account?</span>
+        <a id="toggle-link">Register</a>
+    </p>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
