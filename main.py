@@ -6,6 +6,11 @@ from database import Base, engine, SessionLocal
 import models, schemas
 import bcrypt
 
+# New imports for serving frontend
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+
 app = FastAPI(title="Auth API")
 
 # -------------------------
@@ -13,11 +18,24 @@ app = FastAPI(title="Auth API")
 # -------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],        # allow all origins (HTML pages use origin: null)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# -------------------------
+# Serve Frontend
+# -------------------------
+
+# Mount frontend folder so script.js and style.css work
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+# Serve index.html at root URL
+@app.get("/")
+def serve_homepage():
+    return FileResponse("frontend/index.html")
+
 
 # -------------------------
 # Create DB tables
