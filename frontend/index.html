@@ -4,7 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auth System</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.container {
+    background: #fff;
+    padding: 30px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #4e54c8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #3c41a8;
+}
+
+.toggle-text {
+    margin-top: 15px;
+}
+
+#toggle-link {
+    color: #4e54c8;
+    cursor: pointer;
+}
+
+#message {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}
+
+    </style>
 </head>
 <body>
 
@@ -32,6 +99,85 @@
 
 </div>
 
-<script src="script.js"></script>
+<script>
+    let mode = "login"; // default mode
+
+const form = document.getElementById("auth-form");
+const messageBox = document.getElementById("message");
+const usernameField = document.getElementById("username-field");
+const formTitle = document.getElementById("form-title");
+const submitBtn = document.getElementById("submit-btn");
+const toggleLink = document.getElementById("toggle-link");
+const toggleAction = document.getElementById("toggle-action");
+
+// --------------------------
+// Toggle between Login / Register
+// --------------------------
+toggleLink.addEventListener("click", () => {
+    if (mode === "login") {
+        mode = "register";
+        usernameField.classList.remove("hidden");
+        formTitle.textContent = "Register";
+        submitBtn.textContent = "Register";
+        toggleAction.textContent = "Already have an account?";
+        toggleLink.textContent = "Login";
+    } else {
+        mode = "login";
+        usernameField.classList.add("hidden");
+        formTitle.textContent = "Login";
+        submitBtn.textContent = "Login";
+        toggleAction.textContent = "Don't have an account?";
+        toggleLink.textContent = "Register";
+    }
+});
+
+// --------------------------
+// Form Submit
+// --------------------------
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    messageBox.textContent = "";
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value;
+
+    let url = "";
+    let body = {};
+
+    if (mode === "login") {
+        url = "http://127.0.0.1:8000/login";
+        body = { email, password };
+    } else {
+        url = "http://127.0.0.1:8000/register";
+        body = { username, email, password };
+    }
+
+    try {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            messageBox.style.color = "red";
+            messageBox.textContent = data.detail || "Error occurred";
+            return;
+        }
+
+        messageBox.style.color = "green";
+        messageBox.textContent = data.message;
+
+    } catch (err) {
+        messageBox.style.color = "red";
+        messageBox.textContent = "Server error";
+    }
+});
+
+</script>
+
 </body>
 </html>
